@@ -1,0 +1,107 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>    
+    <title>Wazzup!!</title>
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+    <script type="text/javascript">
+        var geocoder=new google.maps.Geocoder();;
+        var map;
+        var infowindow = new google.maps.InfoWindow();
+        var marker;
+        var pos;
+        var city, state, country;
+
+        function gotLocation(position) {
+            pos = position;
+            var latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+            var myOptions = {
+                zoom: 15,
+                center: latlng,
+                mapTypeControl: false,
+                navigationControlOptions: { style: google.maps.NavigationControlStyle.SMALL },
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+            map = new google.maps.Map(document.getElementById("mapCanvas"), myOptions);
+            
+            revGeoCode(position);
+        }
+        function locationError(data) {
+            var status = document.querySelector('#status');
+            status.innerHTML = data;
+        }
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(gotLocation, locationError);
+        } else {
+            error('not supported');
+        }
+
+        function getAddress(results) {
+            var index = results.length - 3;
+            if (index > -1) {
+                var addressComponents = results[index].address_components;
+                city = addressComponents[0].long_name;
+                state = addressComponents[1].long_name;
+                country = addressComponents[2].long_name;
+                var status = document.querySelector("#status");
+                status.innerHTML = "Cool!! you are in <strong>City</strong>:" + city + " <strong>State</strong>:" + state + " <strong>Country</strong>:" + country;
+                getTweets();
+            }
+        }
+
+        function revGeoCode(position) {
+            var latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+            geocoder.geocode({ 'latLng': latlng }, function (results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                    if (results[1]) {
+                        map.setZoom(15);
+                        marker = new google.maps.Marker({
+                            position: latlng,
+                            map: map
+                        });
+                        infowindow.setContent(results[1].formatted_address);
+                        infowindow.open(map, marker);
+                    }
+                    getAddress(results);
+                } else {
+                    alert("Geocoder failed due to: " + status);
+                }
+            });
+        }
+
+    </script>
+    <script type="text/javascript">
+        var twitterSearchUrl = "http://search.twitter.com/search.json?callback=?&rpp=20&result_type=recent&geocode=";
+        function getTweets() {
+            twitterSearchUrl += pos.coords.latitude.toString() + "," + pos.coords.longitude.toString() + ",25km";// +"&q="+city;
+            $.getJSON(twitterSearchUrl, function (data) {
+                if (data.results.length > 0) {
+                    var tweetHtml = "";
+                    for (var i = 0; i < data.results.length; i++) {
+                        var tweet = data.results[i];
+                        tweetHtml += "<div><img src='" + tweet.profile_image_url + "'/> <strong>" + tweet.from_user+"</strong>: " + tweet.text + "</div>";
+                    }
+                    document.querySelector("#content").innerHTML = tweetHtml;
+                }
+                else {
+                    document.querySelector("#content").innerHTML = "no tweet found!!";
+                }
+
+            });
+        }
+    </script>
+</head>
+<body>
+<article id="main">
+<div>
+    <span id="status">Finding your location..</span>
+</div>
+<div>
+<div style="float:left;width:500px;height:400px;" id="mapCanvas"></div>
+<div id="content"></div>
+    <div style="clear:both;"></div>
+</div>    
+</article> 
+ <footer>&copy; Copyright Wazzup!!</footer>
+</body>
+</html>
