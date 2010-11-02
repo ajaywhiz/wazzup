@@ -79,7 +79,7 @@
                     var tweetHtml = "";
                     for (var i = 0; i < data.results.length; i++) {
                         var tweet = data.results[i];
-                        tweetHtml += "<div><img src='" + tweet.profile_image_url + "'/> <strong>" + tweet.from_user+"</strong>: " + tweet.text + "</div>";
+                        tweetHtml += "<div><img src='" + tweet.profile_image_url + "'/> <strong>" + tweet.from_user + "</strong>: " + tweet.text + "</div>";
                     }
                     document.querySelector("#content").innerHTML = tweetHtml;
                 }
