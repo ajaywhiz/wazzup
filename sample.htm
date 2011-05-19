@@ -1,0 +1,71 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>Untitled Page</title>
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript">
+        function animate() {
+//            $("#div1").hide("slow", function () {
+//                $(this).replaceWith("<div class=\"activity\">New Div!</div>");
+            //            });
+
+            $("#div1").removeClass("after").addClass("before");
+            $("#div2").removeClass("before").addClass("after");
+            //$("#div1").hide();
+        }
+    </script>
+    <style type="text/css">
+        body
+        {        	
+        	background:#2c3033;        	        	
+        }
+        
+        .trans
+        {
+        	-moz-transition-duration: 1.5s;
+        -webkit-transition-duration: 1.5s;
+        	transition-duration: 1.5s;
+        }
+        
+        .before
+        {
+        	left: -550px;
+            opacity: 0;     
+            margin-left:-550px;       
+        }
+        
+        .after
+        {
+        	left: 0;
+        	margin-left:0;
+            opacity: 1;
+        }
+         .activity
+        {
+        	height:200px;
+        	width:200px;
+        	background-color:White;
+        	font-family:Verdana, Arial, Helvetica, sans-serif;
+        	color:Black;
+        	border-radius: 15px;
+        	border-color:Lime;
+        	-moz-box-shadow:5px 5px 5px #888;
+        	box-shadow: 5px 5px 5px #888;
+        	-webkit-box-shadow:5px 5px 5px #888;
+        	float:left;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <input type="button" name="btn" value="Start" onclick="animate()" />
+</div>
+<div id="div1" class="activity trans after">
+Before animation
+</div>
+    <div id="div2" class="activity trans before">
+        after animation
+    </div>
+
+</body>
+</html>
