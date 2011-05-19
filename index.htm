@@ -3,7 +3,10 @@
 <head>    
     <title>Wazzup!!</title>
     <script type="text/javascript" src="js/jquery.js"></script>
-    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>    
+    <script type="text/javascript" src="http://cloud.github.com/downloads/malsup/cycle/jquery.cycle.all.2.74.js"></script>
+    <script type="text/javascript" src="js/wazzup-core.js"></script>    
+    <script type="text/javascript" src="activities/twitter.js"></script>
     <script type="text/javascript">
         var geocoder=new google.maps.Geocoder();;
         var map;
@@ -45,7 +48,9 @@
                 country = addressComponents[2].long_name;
                 var status = document.querySelector("#status");
                 status.innerHTML = "Cool!! you are in <strong>City</strong>:" + city + " <strong>State</strong>:" + state + " <strong>Country</strong>:" + country;
-                getTweets();
+                //getTweets();
+
+                initWazzup();
             }
         }
 
@@ -69,39 +74,92 @@
             });
         }
 
-    </script>
-    <script type="text/javascript">
-        var twitterSearchUrl = "http://search.twitter.com/search.json?callback=?&rpp=20&result_type=recent&geocode=";
-        function getTweets() {
-            twitterSearchUrl += pos.coords.latitude.toString() + "," + pos.coords.longitude.toString() + ",25km";// +"&q="+city;
-            $.getJSON(twitterSearchUrl, function (data) {
-                if (data.results.length > 0) {
-                    var tweetHtml = "";
-                    for (var i = 0; i < data.results.length; i++) {
-                        var tweet = data.results[i];
-                        tweetHtml += "<div><img src='" + tweet.profile_image_url + "'/> <strong>" + tweet.from_user+"</strong>: " + tweet.text + "</div>";
-                    }
-                    document.querySelector("#content").innerHTML = tweetHtml;
-                }
-                else {
-                    document.querySelector("#content").innerHTML = "no tweet found!!";
-                }
+        function initWazzup() {
+            var address = {};
+            address.city = city;
+            address.state = state;
+            address.country = country;
 
-            });
+            myWazzup.setLocation(pos, address);
+
+            myWazzup.start();           
+            
         }
+
     </script>
+    <style type="text/css">
+        body
+        {        	
+        	background:#2c3033;        	        	
+        }
+        
+        .trans
+        {
+        	-moz-transition-duration: 1.5s;
+        -webkit-transition-duration: 1.5s;
+        	transition-duration: 1.5s;
+        }
+        
+        .before
+        {
+        	left: -550px;
+            opacity: 0;     
+            margin-left:-550px;       
+        }
+        
+        .after
+        {
+        	left: 0;
+        	margin-left:30;
+            opacity: 1;
+        }
+        
+        .text
+        {
+        	font-family:Verdana, Arial, Helvetica, sans-serif;
+        	color:White;
+        }
+        
+        .activity
+        {
+        	background-color:White;
+        	font-family:Verdana, Arial, Helvetica, sans-serif;
+        	color:Black;
+        	border-radius: 15px;
+        	border-color:Lime;
+        	box-shadow: 3px 3px 7px #888;
+        	-moz-box-shadow:5px 5px 5px #888;
+        	box-shadow: 5px 5px 5px #888;
+        	-webkit-box-shadow:5px 5px 5px #888;
+        	float:left;
+        	height:150px;
+        	width:500px;
+        }
+        .actData
+        {
+        	margin-left:20px;
+        }
+    </style>
 </head>
 <body>
 <article id="main">
 <div>
-    <span id="status">Finding your location..</span>
+    <span id="status" class="text">Finding your location..</span>
 </div>
 <div>
 <div style="float:left;width:500px;height:400px;" id="mapCanvas"></div>
-<div id="content"></div>
+<div id="content" style="width:500px;height:400px;overflow:auto;" class="text">
+</div>
+
     <div style="clear:both;"></div>
 </div>    
+<div id="container">
+<div class="activity trans after" id="actold">
+Looking for Wazzup!! activities.
+</div>
+</div>
+<div style="clear:both;"></div>
 </article> 
- <footer>&copy; Copyright Wazzup!!</footer>
+ <footer class="text">&copy; Copyright Wazzup!!</footer>
 </body>
 </html>
