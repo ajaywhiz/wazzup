@@ -74,24 +74,6 @@
             });
         }
 
-    </script>
-    <script type="text/javascript">
-        var twitterSearchUrl = "http://search.twitter.com/search.json?callback=?&rpp=20&result_type=recent&geocode=";
-        function getTweets() {
-            twitterSearchUrl += pos.coords.latitude.toString() + "," + pos.coords.longitude.toString() + ",25km";// +"&q="+city;
-            $.getJSON(twitterSearchUrl, function (data) {
-                if (data.results.length > 0) {
-                    var tweetHtml = "";
-                    for (var i = 0; i < data.results.length; i++) {
-                        var tweet = data.results[i];
-                        tweetHtml += "<div><img src='" + tweet.profile_image_url + "'/> <strong>" + tweet.from_user + "</strong>: " + tweet.text + "</div>";
-                    }
-                    document.querySelector("#content").innerHTML = tweetHtml;
-                }
-                else {
-                    document.querySelector("#content").innerHTML = "no tweet found!!";
-                }
-
         function initWazzup() {
             var address = {};
             address.city = city;
